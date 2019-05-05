@@ -8,7 +8,9 @@
 import scrapy
 
 
-class YilongwangItem(scrapy.Item):
+
+class Yilongwang_List_Item(scrapy.Item):
     # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+    projectId = scrapy.Field();
+
+

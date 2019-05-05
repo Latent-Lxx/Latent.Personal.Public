@@ -9,31 +9,66 @@
 #     https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 
+
+from mock_useragent import MockUserAgent
+
+
 BOT_NAME = 'yilongwang'
 
 SPIDER_MODULES = ['yilongwang.spiders']
 NEWSPIDER_MODULE = 'yilongwang.spiders'
 
 
+
+#==> 配置User-Agent
+ua = MockUserAgent()
+USieER_AGENT =ua.random_chrome
+
+
+
+#==> 配置redis
+
+# #启用Redis调度存储请求队列
+# SCHEDULER = "scrapy_redis.scheduler.Scheduler"
+#
+# #确保所有的爬虫通过Redis去重
+# DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDupeFilter"
+#
+# #不清除Redis队列、这样可以暂停/恢复 爬取
+# SCHEDULER_PERSIST = 'true'
+#
+# # #使用优先级调度请求队列 （默认使用）
+# SCHEDULER_QUEUE_CLASS = 'scrapy_redis.queue.PriorityQueue'
+# #
+# # # 关掉一个scrapy shell
+# # EXTENSIONS = {
+# #     'scrapy.telnet.TelnetConsole': None
+# #  }
+# #
+#
+
+
+
+
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'yilongwang (+http://www.yourdomain.com)'
+#USER_AGENT = 'chinese_goods (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = True
+ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-#CONCURRENT_REQUESTS = 32
+# CONCURRENT_REQUESTS = 12
 
-# Configure a delay for requests for the same website (default: 0)
-# See https://doc.scrapy.org/en/latest/topics/settings.html#download-delay
-# See also autothrottle settings and docs
-#DOWNLOAD_DELAY = 3
+# Co/
+DOWNLOAD_DELAY = 1
+
+
 # The download delay setting will honor only one of:
-#CONCURRENT_REQUESTS_PER_DOMAIN = 16
-#CONCURRENT_REQUESTS_PER_IP = 16
+# CONCURRENT_REQUESTS_PER_DOMAIN = 64
+# CONCURRENT_REQUESTS_PER_IP = 64
 
 # Disable cookies (enabled by default)
-#COOKIES_ENABLED = False
+COOKIES_ENABLED = False
 
 # Disable Telnet Console (enabled by default)
 #TELNETCONSOLE_ENABLED = False
@@ -47,14 +82,15 @@ ROBOTSTXT_OBEY = True
 # Enable or disable spider middlewares
 # See https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 #SPIDER_MIDDLEWARES = {
-#    'yilongwang.middlewares.YilongwangSpiderMiddleware': 543,
+#    'chinese_goods.middlewares.ChineseGoodsSpiderMiddleware': 543,
 #}
 
 # Enable or disable downloader middlewares
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
-#DOWNLOADER_MIDDLEWARES = {
-#    'yilongwang.middlewares.YilongwangDownloaderMiddleware': 543,
-#}
+DOWNLOADER_MIDDLEWARES = {
+     'yilongwang.middlewares.CodeStatusMiddleware':1,
+
+}
 
 # Enable or disable extensions
 # See https://doc.scrapy.org/en/latest/topics/extensions.html
@@ -64,13 +100,14 @@ ROBOTSTXT_OBEY = True
 
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    'yilongwang.pipelines.YilongwangPipeline': 300,
-#}
+ITEM_PIPELINES = {
+   # 'chinese_goods.pipelines.ChineseGoodsPipeline': 400,
+   # 'scrapy_redis.pipelines.RedisPipeline': 100,
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://doc.scrapy.org/en/latest/topics/autothrottle.html
-#AUTOTHROTTLE_ENABLED = True
+#AUTOTHROTTLE_ENABLED = 'true'
 # The initial download delay
 #AUTOTHROTTLE_START_DELAY = 5
 # The maximum download delay to be set in case of high latencies
@@ -83,8 +120,18 @@ ROBOTSTXT_OBEY = True
 
 # Enable and configure HTTP caching (disabled by default)
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html#httpcache-middleware-settings
-#HTTPCACHE_ENABLED = True
+#HTTPCACHE_ENABLED = 'true'
 #HTTPCACHE_EXPIRATION_SECS = 0
+#HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
+#
+# REDIRECT_ENABLED = False
+# allow_redirects='true'
+# DOWNLOAD_TIMEOUT = 300
+# SPEED_INDEX_RULE_LAST=1
+# SPEED_INDEX_HIGHER_PRIORITY=1
+# REACTOR_THREADPOOL_MAXSIZE = 1000
+
+

@@ -1,103 +1,40 @@
-# -*- coding: utf-8 -*-
-
-# Define here the models for your spider middleware
-#
-# See documentation in:
-# https://doc.scrapy.org/en/latest/topics/spider-middleware.html
-
-from scrapy import signals
+from yilongwang import  publicMians as PM;
+import redis
 
 
-class YilongwangSpiderMiddleware(object):
-    # Not all methods need to be defined. If a method is not defined,
-    # scrapy acts as if the spider middleware does not modify the
-    # passed objects.
-
-    @classmethod
-    def from_crawler(cls, crawler):
-        # This method is used by Scrapy to create your spiders.
-        s = cls()
-        crawler.signals.connect(s.spider_opened, signal=signals.spider_opened)
-        return s
-
-    def process_spider_input(self, response, spider):
-        # Called for each response that goes through the spider
-        # middleware and into the spider.
-
-        # Should return None or raise an exception.
-        return None
-
-    def process_spider_output(self, response, result, spider):
-        # Called with the results returned from the Spider, after
-        # it has processed the response.
-
-        # Must return an iterable of Request, dict or Item objects.
-        for i in result:
-            yield i
-
-    def process_spider_exception(self, response, exception, spider):
-        # Called when a spider or process_spider_input() method
-        # (from other spider middleware) raises an exception.
-
-        # Should return either None or an iterable of Response, dict
-        # or Item objects.
-        pass
-
-    def process_start_requests(self, start_requests, spider):
-        # Called with the start requests of the spider, and works
-        # similarly to the process_spider_output() method, except
-        # that it doesn’t have a response associated.
-
-        # Must return only requests (not items).
-        for r in start_requests:
-            yield r
-
-    def spider_opened(self, spider):
-        spider.logger.info('Spider opened: %s' % spider.name)
+"""*******状态码中间层******"""
+class CodeStatusMiddleware(object):
+    def process_response(self, response, request, spider):
+        if response.status == 200:
+            PM.getCorlor('==> <200>访问正常.','',1,40,42);
+            return response
+        elif response.status == 429:
+            PM.getCorlor('==> <429>请求失败！','',1,40,41);
+            PM.getPrint('==> 请求太过频繁！','',31);
+            redisdb = redis.Redis(host='192.168.0.102', port=6379, db=0, decode_responses='true');
+            redisdb.lpush('except_urls:urls',response.url)
+            return response
+        elif response.status == 403:
+            PM.getCorlor('==> <403>请求失败！','',1,40,41);
+            PM.getPrint('==> 请求被拒绝！','',31);
+            return response
 
 
-class YilongwangDownloaderMiddleware(object):
-    # Not all methods need to be defined. If a method is not defined,
-    # scrapy acts as if the downloader middleware does not modify the
-    # passed objects.
+        elif response.status == "503 Service Unavailable":
 
-    @classmethod
-    def from_crawler(cls, crawler):
-        # This method is used by Scrapy to create your spiders.
-        s = cls()
-        crawler.signals.connect(s.spider_opened, signal=signals.spider_opened)
-        return s
+            PM.getCorlor('==> <503>请求失败', '', 1, 40, 41);
 
-    def process_request(self, request, spider):
-        # Called for each request that goes through the downloader
-        # middleware.
+            PM.getPrint('==> 服务器维护或容量不足！', '', 31);
 
-        # Must either:
-        # - return None: continue processing this request
-        # - or return a Response object
-        # - or return a Request object
-        # - or raise IgnoreRequest: process_exception() methods of
-        #   installed downloader middleware will be called
-        return None
+            return response
 
-    def process_response(self, request, response, spider):
-        # Called with the response returned from the downloader.
+        else:
+            return response
 
-        # Must either;
-        # - return a Response object
-        # - return a Request object
-        # - or raise IgnoreRequest
-        return response
 
-    def process_exception(self, request, exception, spider):
-        # Called when a download handler or a process_request()
-        # (from other downloader middleware) raises an exception.
 
-        # Must either:
-        # - return None: continue processing this exception
-        # - return a Response object: stops process_exception() chain
-        # - return a Request object: stops process_exception() chain
-        pass
 
-    def spider_opened(self, spider):
-        spider.logger.info('Spider opened: %s' % spider.name)
+
+
+
+

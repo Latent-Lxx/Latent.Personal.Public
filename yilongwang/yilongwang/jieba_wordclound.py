@@ -42,7 +42,7 @@ wc = WordCloud(background_color='white',
                mask=graph,
                max_font_size=100,
                random_state=42,
-               font_path='../simhei.ttf'
+               font_path='/home/latent-lxx/fonts/msyh.ttf'
                )
 
 #创建csv文件
@@ -56,7 +56,7 @@ with open ('/home/latent-lxx/Desktop/makesi','r') as f,open ('/home/latent-lxx/D
     string = f.read();
     jieba_cut = jieba.cut(string,cut_all=False);
     result_str = '/'.join(jieba_cut);
-    top = jieba.analyse.extract_tags(result_str,topK=100,withWeight=True,allowPOS='n')
+    top = jieba.analyse.extract_tags(result_str,topK=100,withWeight='true',allowPOS='n')
 
     for i in top:
         csv.writer(g).writerow(i);
@@ -73,7 +73,9 @@ wc.generate_from_frequencies(dic);
 image = ImageColorGenerator(graph);
 plt.imshow(wc);
 plt.axis('off');
-plt.show()
+# plt.show();
+wc.to_file('/home/latent-lxx/Desktop/result.png');
+
 
 
 
