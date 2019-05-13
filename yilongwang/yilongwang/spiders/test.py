@@ -21,7 +21,11 @@ class CommentSpider(scrapy.Spider):
     start_urls=['http://hotel.elong.com/91297500/'];
 
     urls_list = [];
-    num = 10;
+    # 最大页数
+    max_page = 1
+
+    # 请求文本的行数
+    num = 20;
 
 
     def __init__(self):
@@ -68,9 +72,15 @@ class CommentSpider(scrapy.Spider):
             pm.getPrint('==> 爬去结束...','',31)
 
     def parse_page(self,response):
-
-        for i in range(50):
+         try:
+             responses = response.xpath('//*[@id="comment_paging"]/a[7]/text()')[0].extract();
+             self.max_page = int(responses)
+         except Exception as e:
+            responses = response.xpath('//*[@id="comment_paging"]/a[8]/text()')[0].extract();
+            self.max_page =int(responses)
+         for i in range(self.max_page):
             time.sleep(1);
+            pm.getPrint('==> 当前最大页面为：',self.max_page,31);
             try:
                 next_page = self.driver.find_element_by_xpath('//*[@id="comment_paging"]/a[9]');
                 ActionChains(self.driver).double_click(next_page).perform();
@@ -90,8 +100,8 @@ class CommentSpider(scrapy.Spider):
                 for i in responses:
                     item['comment'] = i.text;
                     yield item;
-                pm.getPrint('==> 页面跳转成功...', '', 32)
-
+                pm.getPrint('\n页面跳转成功...', '', 32)
+                pm.getPrint('\n当前项目为:', self.num, 31)
 
             except Exception as e:
                 next_page = self.driver.find_element_by_xpath('//*[@id="comment_paging"]/a[8]');
@@ -114,14 +124,15 @@ class CommentSpider(scrapy.Spider):
                     item['comment'] = i.text;
                     yield item;
                 pm.getPrint('==> 页面跳转成功...', '', 32);
+                pm.getPrint('\n==> 当前项目为:', self.num, 31)
 
 
             # 获取第二条链接
 
 
-        string = linecache.getline('/home/latent-lxx/Desktop/elong/hotelUrls',self.num)
-        urls = 'http://hotel.elong.com/' + re.findall('\d+',string)[0];
-        yield scrapy.Request(url=urls,
+         string = linecache.getline('/home/latent-lxx/Desktop/elong/hotelUrls',self.num)
+         urls = 'http://hotel.elong.com/' + re.findall('\d+',string)[0];
+         yield scrapy.Request(url=urls,
                              callback=self.parse,
                              dont_filter='flase',
                              headers=getAsyHeaders(),
@@ -130,8 +141,9 @@ class CommentSpider(scrapy.Spider):
 
 
 
-    # def close(spider, reason):
-    #     spider.driver.close();
+    def close(spider, response):
+        spider.driver.close();
+
 
 
 
