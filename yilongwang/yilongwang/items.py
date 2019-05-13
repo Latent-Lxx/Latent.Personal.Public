@@ -14,3 +14,9 @@ class Yilongwang_List_Item(scrapy.Item):
     projectId = scrapy.Field();
 
 
+
+class Yilongwang_Comment_Item(scrapy.Item):
+    # define the fields for your item here like:
+    comment = scrapy.Field();
+    name = scrapy.Field()
+

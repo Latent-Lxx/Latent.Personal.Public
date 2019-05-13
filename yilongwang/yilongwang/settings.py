@@ -28,7 +28,9 @@ USieER_AGENT =ua.random_chrome
 
 #==> 配置redis
 
-# #启用Redis调度存储请求队列
+# REDIS_URL = 'redis://127.0.0.1:6379/0'
+
+#启用Redis调度存储请求队列
 # SCHEDULER = "scrapy_redis.scheduler.Scheduler"
 #
 # #确保所有的爬虫通过Redis去重
@@ -39,13 +41,13 @@ USieER_AGENT =ua.random_chrome
 #
 # # #使用优先级调度请求队列 （默认使用）
 # SCHEDULER_QUEUE_CLASS = 'scrapy_redis.queue.PriorityQueue'
-# #
-# # # 关掉一个scrapy shell
-# # EXTENSIONS = {
-# #     'scrapy.telnet.TelnetConsole': None
-# #  }
-# #
 #
+# # 关掉一个scrapy shell
+# EXTENSIONS = {
+#     'scrapy.telnet.TelnetConsole': None
+#  }
+#
+
 
 
 
@@ -57,7 +59,7 @@ USieER_AGENT =ua.random_chrome
 ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-# CONCURRENT_REQUESTS = 12
+# CONCURRENT_REQUESTS = 16
 
 # Co/
 DOWNLOAD_DELAY = 1
@@ -68,7 +70,7 @@ DOWNLOAD_DELAY = 1
 # CONCURRENT_REQUESTS_PER_IP = 64
 
 # Disable cookies (enabled by default)
-COOKIES_ENABLED = False
+COOKIES_ENABLED = True
 
 # Disable Telnet Console (enabled by default)
 #TELNETCONSOLE_ENABLED = False
@@ -89,6 +91,8 @@ COOKIES_ENABLED = False
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
      'yilongwang.middlewares.CodeStatusMiddleware':1,
+     'yilongwang.middlewares.PageMiddleware':1,
+     # 'yilongwang.middlewares.ABProxyMiddleware':1,
 
 }
 
@@ -101,7 +105,7 @@ DOWNLOADER_MIDDLEWARES = {
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   # 'chinese_goods.pipelines.ChineseGoodsPipeline': 400,
+   'yilongwang.pipelines.YilongwangPipeline': 100,
    # 'scrapy_redis.pipelines.RedisPipeline': 100,
 }
 
