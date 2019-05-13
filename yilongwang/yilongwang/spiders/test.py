@@ -18,14 +18,14 @@ from scrapy_redis.spiders import RedisSpider
 class CommentSpider(scrapy.Spider):
     name = 'test'
     allowed_domains = ['hotel.elong.com']
-    start_urls=['http://hotel.elong.com/91297500/'];
+    start_urls=['http://hotel.elong.com/92483891/'];
 
     urls_list = [];
     # 最大页数
     max_page = 1
 
     # 请求文本的行数
-    num = 20;
+    num = 31;
 
 
     def __init__(self):
@@ -76,8 +76,20 @@ class CommentSpider(scrapy.Spider):
              responses = response.xpath('//*[@id="comment_paging"]/a[7]/text()')[0].extract();
              self.max_page = int(responses)
          except Exception as e:
-            responses = response.xpath('//*[@id="comment_paging"]/a[8]/text()')[0].extract();
-            self.max_page =int(responses)
+            #  如果获取页数失败
+            try:
+                responses = response.xpath('//*[@id="comment_paging"]/a[8]/text()')[0].extract();
+                self.max_page =int(responses);
+            except Exception as e :
+                self.num += 1;
+                string = linecache.getline('/home/latent-lxx/Desktop/elong/hotelUrls', self.num)
+                urls = 'http://hotel.elong.com/' + re.findall('\d+', string)[0];
+                yield scrapy.Request(url=urls,
+                                     callback=self.parse,
+                                     dont_filter='flase',
+                                     headers=getAsyHeaders(),
+                                     );
+
          for i in range(self.max_page):
             time.sleep(1);
             pm.getPrint('==> 当前最大页面为：',self.max_page,31);
