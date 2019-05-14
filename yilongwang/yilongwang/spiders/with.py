@@ -1,7 +1,11 @@
 # #!/usr/bin/env python
 # # -*- coding: utf-8 -*-
 #
-import linecache
-
-string = linecache.getline('/home/latent-lxx/Desktop/elong/hotelUrls', 2)
-print(string)
+# from selenium import  webdriver
+# import os
+# feather_path = os.path.abspath('..');
+# chromedriver_path = f'{feather_path}/elong/chromedriver';
+# print(chromedriver_path);
+# driver = webdriver.Chrome(executable_path=chromedriver_path);
+# driver.close()
+# print('ok');

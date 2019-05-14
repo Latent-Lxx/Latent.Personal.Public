@@ -60,18 +60,24 @@ class PageMiddleware(object):
             # 点击点评
             dianping = spider.driver.find_element_by_xpath('//*[@id="tabMenu"]/ul/li[4]');
             ActionChains(spider.driver).double_click(dianping).perform();
+            ActionChains(spider.driver).double_click(dianping).perform();
             spider.driver.implicitly_wait(10)
             time.sleep(2);
             # 点击推荐
             tuijian = spider.driver.find_element_by_xpath('//*[@id="review"]/div[1]/div[2]/ul/li[2]');
+            ActionChains(spider.driver).double_click(tuijian).perform();
             ActionChains(spider.driver).double_click(tuijian).perform();
             spider.driver.implicitly_wait(10)
             time.sleep(5);
             # 点击全部
             quanbu = spider.driver.find_element_by_xpath('//*[@id="review"]/div[1]/div[2]/ul/li[1]');
             ActionChains(spider.driver).double_click(quanbu).perform();
+            ActionChains(spider.driver).double_click(quanbu).perform();
             spider.driver.implicitly_wait(10)
             time.sleep(2);
+            html = spider.driver.page_source;
+            return HtmlResponse(url=spider.driver.current_url, body=html, encoding='utf-8', request=request);
+
 
         except Exception as e:
             pass
@@ -90,7 +96,7 @@ class PageMiddleware(object):
         #     time.sleep(0.3);
         #     return HtmlResponse(url=spider.driver.current_url, body=html, encoding='utf-8', request=request);
 
-        html = spider.driver.page_source;
+
 
 
         # for i in range(99):
@@ -109,7 +115,6 @@ class PageMiddleware(object):
         #         time.sleep(1);
         #         html = spider.driver.page_source;
         #         return HtmlResponse(url=spider.driver.current_url, body=html, encoding='utf-8', request=request);
-        return HtmlResponse(url=spider.driver.current_url, body=html, encoding='utf-8', request=request);
 
 
 """*******配置阿布云******"""
